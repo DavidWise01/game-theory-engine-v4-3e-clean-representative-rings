@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>v4.3e Clean Representative Rings</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#030611;
+  --panel:#0f172a;
+  --line:#2e3a55;
+  --text:#e5e7eb;
+  --muted:#9ca3af;
+  --core:#60a5fa;
+  --male:#5eead4;
+  --female:#f0abfc;
+  --judge:#fb923c;
+  --ring0:#93c5fd;
+  --ring1:#c084fc;
+  --ring2:#fef08a;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:radial-gradient(circle at 50% 38%,rgba(96,165,250,.16),transparent 34%),linear-gradient(180deg,#07101f,var(--bg));
+  color:var(--text);
+  font-family:system-ui,Segoe UI,sans-serif;
+  overflow:hidden;
+}
+header{
+  height:72px;
+  padding:14px 22px;
+  background:rgba(15,23,42,.92);
+  border-bottom:1px solid var(--line);
+}
+h1{font-size:22px;margin:0}.sub{font-size:13px;color:var(--muted)}
+main{
+  height:calc(100vh - 72px);
+  display:grid;
+  grid-template-columns:290px minmax(540px,1fr) 340px;
+  gap:12px;
+  padding:12px;
+}
+section{
+  background:rgba(15,23,42,.88);
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:14px;
+  overflow:auto;
+}
+button{
+  width:100%;
+  padding:10px;
+  margin:5px 0;
+  background:#172033;
+  color:white;
+  border:1px solid var(--line);
+  border-radius:10px;
+  font-weight:800;
+}
+.stage{
+  position:relative;
+  width:100%;
+  height:100%;
+  min-height:620px;
+  border:1px solid var(--line);
+  border-radius:22px;
+  overflow:hidden;
+  background:radial-gradient(circle at center,rgba(255,255,255,.06),transparent 70%);
+}
+.ring{
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+  pointer-events:none;
+}
+.solid0{width:170px;height:170px;border:3px solid var(--ring0);box-shadow:0 0 16px var(--ring0)}
+.dash0{width:250px;height:250px;border:3px dashed var(--ring0)}
+.solid1{width:330px;height:330px;border:3px solid var(--ring1);box-shadow:0 0 16px var(--ring1)}
+.dash1{width:420px;height:420px;border:3px dashed var(--ring1)}
+.solid2{width:500px;height:500px;border:3px solid var(--ring2);box-shadow:0 0 16px var(--ring2)}
+.dash2{width:590px;height:590px;border:3px dashed var(--ring2)}
+.core{
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  width:122px;height:122px;
+  border-radius:50%;
+  background:#071121;
+  border:3px solid white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  z-index:20;
+  box-shadow:0 0 32px rgba(96,165,250,.9);
+  font-size:12px;
+  font-weight:900;
+  padding:10px;
+}
+.node{
+  position:absolute;
+  border-radius:999px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  border:1px solid rgba(255,255,255,.35);
+  cursor:pointer;
+  z-index:10;
+  font-weight:900;
+}
+.nucleus{
+  width:36px;height:36px;font-size:10px;
+}
+.rep{
+  width:76px;height:42px;font-size:12px;
+}
+.judge{
+  width:62px;height:62px;
+  background:var(--judge);
+  color:#1f0902;
+  font-size:11px;
+  z-index:18;
+}
+.male{background:rgba(94,234,212,.92);color:#021013}
+.female{background:rgba(240,171,252,.92);color:#16051f}
+.selected{outline:3px solid white;box-shadow:0 0 24px white}
+.chaser{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:12px;height:12px;
+  border-radius:50%;
+  box-shadow:0 0 18px currentColor,0 0 32px currentColor;
+  z-index:25;
+}
+.ch0{color:var(--ring0);animation:o0 4s linear infinite}
+.ch1{color:var(--ring1);animation:o1 5.4s linear infinite reverse}
+.ch2{color:var(--ring2);animation:o2 7s linear infinite}
+@keyframes o0{from{transform:rotate(0deg) translateX(125px)}to{transform:rotate(360deg) translateX(125px)}}
+@keyframes o1{from{transform:rotate(0deg) translateX(210px)}to{transform:rotate(360deg) translateX(210px)}}
+@keyframes o2{from{transform:rotate(0deg) translateX(295px)}to{transform:rotate(360deg) translateX(295px)}}
+pre{
+  background:#070914;
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:10px;
+  max-height:44vh;
+  overflow:auto;
+  font-size:12px;
+}
+.badge{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:4px 8px;margin:3px;color:var(--muted)}
+@media(max-width:1050px){
+  body{overflow:auto}
+  main{height:auto;grid-template-columns:1fr}
+  .stage{height:700px}
+}
+</style>
+</head>
+<body>
+<header>
+<h1>v4.3e — Clean Representative Rings</h1>
+<div class="sub">One M×12 and one F×12 node represent each 12-agent subgroup. Full 81 count preserved.</div>
+</header>
+<main>
+<section>
+<h2>Controls</h2>
+<button onclick="fetchWiki()">Grab Wiki Topic</button>
+<button onclick="runCourts()">Run Represented Courts</button>
+<button onclick="judgeQuorum()">Judge Quorum</button>
+<button onclick="resetRun()">Reset</button>
+<h2>Display Rule</h2>
+<pre>Instead of drawing all 24 rung agents:
+
+M×12 = 12 male agents
+F×12 = 12 female agents
+
+Each core still represents:
+2 nucleus witnesses
+24 rung agents
+1 judge
+= 27
+
+3 cores:
+27 × 3 = 81</pre>
+</section>
+
+<section style="overflow:hidden">
+<div class="stage" id="stage">
+  <div class="ring dash2"></div>
+  <div class="ring solid2"></div>
+  <div class="ring dash1"></div>
+  <div class="ring solid1"></div>
+  <div class="ring dash0"></div>
+  <div class="ring solid0"></div>
+  <div class="chaser ch0"></div>
+  <div class="chaser ch1"></div>
+  <div class="chaser ch2"></div>
+  <div class="core" id="core">WIKI<br>TOPIC</div>
+</div>
+</section>
+
+<section>
+<h2>Quorum</h2>
+<div>
+<span class="badge">Judge A</span>
+<span class="badge">Judge B</span>
+<span class="badge">Judge C</span>
+</div>
+<pre id="resultBox">No run yet.</pre>
+<h2>Selected</h2>
+<pre id="info"></pre>
+</section>
+</main>
+
+<script>
+let topic=null;
+let selected=null;
+let courtPackets=[];
+let judgeVotes=[];
+const stage=document.getElementById("stage");
+
+function addNode(obj, radius, angle, cls, label, kind){
+  const el=document.createElement("div");
+  el.className="node "+cls+" "+kind;
+  const cx=stage.clientWidth/2, cy=stage.clientHeight/2;
+  const sizeW=kind==="rep"?76:kind==="judge"?62:36;
+  const sizeH=kind==="rep"?42:kind==="judge"?62:36;
+  el.style.left=(cx+Math.cos(angle)*radius-sizeW/2)+"px";
+  el.style.top=(cy+Math.sin(angle)*radius-sizeH/2)+"px";
+  el.innerHTML=label;
+  el.onclick=()=>{selected=obj;renderInfo()};
+  obj.el=el;
+  stage.appendChild(el);
+}
+
+function buildLayout(){
+  document.querySelectorAll(".node").forEach(n=>n.remove());
+  const cores=[
+    {name:"Core0",rN:62,rRep:125,rJ:165,phase:0},
+    {name:"Core1",rN:112,rRep:210,rJ:260,phase:Math.PI/5},
+    {name:"Core2",rN:165,rRep:295,rJ:345,phase:Math.PI/9}
+  ];
+  cores.forEach((c,i)=>{
+    addNode({id:c.name+"-N-M",core:c.name,count:1,role:"nucleus male"},c.rN,c.phase,"male","M","nucleus");
+    addNode({id:c.name+"-N-F",core:c.name,count:1,role:"nucleus female"},c.rN,c.phase+Math.PI,"female","F","nucleus");
+    addNode({id:c.name+"-M12",core:c.name,count:12,role:"represented male rung"},c.rRep,c.phase+Math.PI/2,"male","M×12","rep");
+    addNode({id:c.name+"-F12",core:c.name,count:12,role:"represented female rung"},c.rRep,c.phase+Math.PI*1.5,"female","F×12","rep");
+    addNode({id:"Judge-"+String.fromCharCode(65+i),core:c.name,count:1,role:"blind outside judge"},c.rJ,c.phase+Math.PI/4,"judge","J"+String.fromCharCode(65+i),"judge");
+  });
+}
+
+async function fetchWiki(){
+  resultBox.textContent="Fetching random Wikipedia article...";
+  try{
+    const r=await fetch("https://en.wikipedia.org/api/rest_v1/page/random/summary");
+    const d=await r.json();
+    topic={title:d.title,extract:d.extract||"",url:d.content_urls?.desktop?.page||""};
+  }catch(e){
+    topic={title:"Fallback Topic: Open-source artificial intelligence",extract:"Browser blocked the live Wikipedia request; local fallback used.",url:""};
+  }
+  core.innerHTML="WIKI<br>"+topic.title.slice(0,36);
+  resultBox.textContent=JSON.stringify(topic,null,2);
+}
+
+function topicScore(){
+  if(!topic)return{veracity:.5,controversy:.5,novelty:.5};
+  const text=(topic.title+" "+topic.extract).toLowerCase();
+  const words=["war","politic","religion","ai","law","rights","conflict","ethic","government","privacy","surveillance","weapon","climate"];
+  let controversy=words.reduce((n,w)=>n+(text.includes(w)?1:0),0)/5;
+  controversy=Math.max(.1,Math.min(1,controversy));
+  const novelty=Math.max(.2,Math.min(1,topic.extract.length/800));
+  const veracity=Math.max(.45,Math.min(.95,.74-controversy*.10+novelty*.18));
+  return{veracity,controversy,novelty};
+}
+
+function runCourts(){
+  if(!topic){fetchWiki().then(runCourts);return;}
+  const s=topicScore();
+  courtPackets=["Core0","Core1","Core2"].map((coreName,i)=>{
+    const mAffirm=Math.round(12*(s.veracity));
+    const fSynth=Math.round(12*(1-s.controversy/2));
+    const affirm=mAffirm;
+    const oppose=12-mAffirm+Math.round(s.controversy*3);
+    const synthesize=fSynth+2;
+    return{
+      core:coreName,
+      anonymous_packet:true,
+      represented_counts:{nucleus:2,male_rung:12,female_rung:12,judge:1,total:27},
+      counts:{affirm,oppose,synthesize},
+      veracity:+s.veracity.toFixed(3),
+      controversy:+s.controversy.toFixed(3),
+      novelty:+s.novelty.toFixed(3)
+    };
+  });
+  resultBox.textContent="Represented courts ran. M×12 and F×12 compressed into anonymous packets.";
+  renderInfo();
+}
+
+function judgeQuorum(){
+  if(courtPackets.length===0)runCourts();
+  judgeVotes=courtPackets.map((p,i)=>{
+    let decision=Object.keys(p.counts).sort((a,b)=>p.counts[b]-p.counts[a])[0];
+    if(p.controversy>.75 && p.veracity<.6)decision="hold";
+    return{judge:"Judge-"+String.fromCharCode(65+i),blind:true,packet:p.core,decision};
+  });
+  const q={};
+  judgeVotes.forEach(v=>q[v.decision]=(q[v.decision]||0)+1);
+  const final=Object.keys(q).sort((a,b)=>q[b]-q[a])[0];
+  resultBox.textContent=JSON.stringify({judge_votes:judgeVotes,quorum:q,final_decision:final},null,2);
+}
+
+function resetRun(){
+  topic=null;selected=null;courtPackets=[];judgeVotes=[];
+  core.innerHTML="WIKI<br>TOPIC";
+  resultBox.textContent="No run yet.";
+  renderInfo();
+}
+
+function renderInfo(){
+  document.querySelectorAll(".node").forEach(n=>n.classList.remove("selected"));
+  if(selected?.el)selected.el.classList.add("selected");
+  info.textContent=JSON.stringify(selected||{topic_loaded:!!topic,packets:courtPackets,jurors:judgeVotes},null,2);
+}
+
+window.addEventListener("resize",()=>{buildLayout();renderInfo()});
+buildLayout();
+renderInfo();
+</script>
+</body>
+</html>
