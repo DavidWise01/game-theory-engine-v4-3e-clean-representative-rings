@@ -4,6 +4,6 @@ slug  : game-theory-engine-v4-3e-clean-representative-rings
 seal  : 85f57b30d67428aa74b1a553265fb80d72bcec40fdc7b69cee1f85b47fe99ee4
 prev  : 1157129a500c270b05f483884a5b555a95fcc522d61935c38062f739d95b7d20
 link  : 879a72b54a4b768ae3de44be8d2a253c7e1691c7465ea03142de360b5b18927b
-head  : 3447d3a0533aaf1e29a8bdc67a9774884fb3ae9dbc8a17064b7a008ca3c4ec90
+head  : 13f9ace173ef2e60af38912ba329b4afcb5a38b84a0e4495e8d30327f8c99cc2
 
 — the tether: link = sha256(index|slug|seal|prev). the chain head commits to the whole corpus.
